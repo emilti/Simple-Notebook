@@ -1,12 +1,25 @@
 var usersController = function() {
 
     function login(context) {
-        var users;
-        data.users.login()
-            .then(function(resUsers) {
-                users = resUsers;
-                return templates.get('users');
+        // event.preventDefault();
+        templates.get('login')
+            .then(function(template){
+                context.$element().html(template());
             })
+
+        var users;
+        $('#go-to-sign-up-button').on('click', function(){
+            this.redirect('#/users/register');
+        })
+
+
+        //$('#form-sign-in-button').on('click', function(){
+        //    data.users.login()
+        //        .then(function(resUsers) {
+        //            users = resUsers;
+        //        })
+        //})
+
     }
 
     function register(context) {
@@ -30,7 +43,7 @@ var usersController = function() {
     }
 
     return {
-        all: all,
+        login: login,
         register: register
     };
 }();

@@ -3,10 +3,15 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Simple Notebook</title>
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-latest.js"></script>
 </head>
 <body>
+<div id="content"></div>
+<script>
+    Parse.initialize("VDq1y6gDvoVZNDkDvwTw8nd3LHkx7FPvf9ANq8kW", "PocV8XeOjQ3kdQCrQdposAijdAJhxVYQv8BzBwKd");
+</script>
 <!--LIBS-->
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
@@ -14,8 +19,10 @@
 <script src="bower_components/handlebars/handlebars.js"></script>
 
 
-<script src="app/data.js"></script>
+
+<script src="controllers/users-controller.js"></script>
 <script src="app/templates.js"></script>
 <script src="app.js"></script>
+<script src="app/data.js"></script>
 </body>
 </html>
