@@ -10,14 +10,18 @@ var usersController = function() {
                 })
 
                 $('#btn-login').on('click', function(){
-                    data.users.login()
+                    var userData = {
+                        username: $('#tb-login-username').val(),
+                        password: $('#tb-login-password').val()
+                    };
+                    data.users.login(userData)
                         .then(function(resUsers) {
-                            users = resUsers;
+                            toastr.success('User seccessfully logged in!');
                         })
                 })
             })
 
-        var users;
+
     }
 
     function register(context) {
@@ -30,13 +34,13 @@ var usersController = function() {
                 });
 
                 $('#btn-register').on('click', function() {
-                    var user = {
+                    var userData = {
                         username: $('#tb-register-username').val(),
                         password: $('#tb-register-passwordInitial').val()
                     };
 
-                    if (user.password ===  $('#tb-register-passwordConfirmed').val()){
-                        data.users.register(user)
+                    if (userData.password ===  $('#tb-register-passwordConfirmed').val()){
+                        data.users.register(userData)
                             .then(function() {
                                 toastr.success('User registered!');
                                 context.redirect('#/');

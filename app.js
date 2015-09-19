@@ -13,5 +13,6 @@
 
     $(function() {
         sammyApp.run('#/');
+
     });
 }());

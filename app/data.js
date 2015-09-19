@@ -14,6 +14,7 @@ var data = (function(){
         var promise = new Promise(function(resolve, reject){
             user.signUp(null, {
                 success: function (user) {
+                    localStorage.setItem('username', userData.username);
                     resolve();
                 },
                 error: function (user, error) {
@@ -26,12 +27,11 @@ var data = (function(){
 
     }
 
-    function login(user){
+    function login(userData){
         var promise = new Promise(function(resolve, reject){
-            Parse.User.logIn($signInFieldUsername.val(), $signInFieldPassword.val(), {
+            Parse.User.logIn(userData.username, userData.password, {
               success: function (user) {
-                        saveCurrentUserSession($signInFieldUsername.val());
-                        localStorage.setItem('dataStored', JSON.stringify(user.get('dataStored')));
+                        localStorage.setItem('username', userData.username);
                         resolve();
                     },
                     error: function (user, error) {
