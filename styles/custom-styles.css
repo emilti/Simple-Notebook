@@ -19,3 +19,14 @@
 body{
     background-color: black;
 }
+
+#notes-wrapper {
+    position: absolute;
+    display: none;
+    padding: 0;
+    padding-left: 10%;
+    padding-top: 15%;
+    width: 90%;
+    height: 100%;
+    border: 1px solid grey;
+}
