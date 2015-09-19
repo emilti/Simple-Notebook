@@ -8,21 +8,14 @@
         this.get('#/users/login', usersController.login);
         this.get('#/users/register', usersController.register);
 
-        this.get('#/notebook', notebookController.notebook);
+        this.get('#/notebook', notebookController.getNotes);
     });
 
     $(function() {
         sammyApp.run('#/');
-        if (localStorage.getItem('username') != undefined){
-            $('#btn-logout').on('click', function() {
-                    data.users.logout()
-                        .then(function() {
-                            location = '#/';
-                        });
-                }
-            );
 
-        }
+
+
 
     });
 }());

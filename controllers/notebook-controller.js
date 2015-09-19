@@ -1,10 +1,15 @@
-var usersController = function() {
+var notebookController = function() {
 
-    function getNotes(){
+    function getNotes(context){
         templates.get('notebook')
             .then(function(template) {
                 context.$element().html(template());
 
+                $('#btn-logout').on('click', function() {
+                        localStorage.removeItem('username');
+                        context.redirect('#/');
+                    }
+                );
             });
     }
 
