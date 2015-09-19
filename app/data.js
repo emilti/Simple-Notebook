@@ -1,25 +1,19 @@
 var data = (function(){
     var STORAGE_AUTH_KEY = 'SPECIAL_AUTHENTICATION_KEY'
     /*User*/
-    function register(user){
+    function register(userData){
         event.preventDefault();
         var loggedInUser = Parse.User.current();
         Parse.User.logOut();
         var user = new Parse.User();
-        var init = $signUpFieldPasswordInitial.val();
-        var confirmed = $signUpFieldPasswordConfirmed.val();
         // updateMainDate(today);
-        if (init == confirmed) {
-            user.set("username", $signUpFieldUsername.val());
-            user.set("password", $signUpFieldPasswordInitial.val());
-            user.set("dataStored", []);
-            //user.set("email", $signUpFieldEmail.val());
-            var promise = new Promise(function(resolve, reject){
+        user.set("username", userData.username);
+        user.set("password", userData.password);
+        user.set("dataStored", []);
+        //user.set("email", $signUpFieldEmail.val());
+        var promise = new Promise(function(resolve, reject){
             user.signUp(null, {
                 success: function (user) {
-                    saveCurrentUserSession($signUpFieldUsername.val());
-                    $invalidPassword.detach();
-                    // displayData();
                     resolve();
                 },
                 error: function (user, error) {
@@ -29,7 +23,7 @@ var data = (function(){
             });
         });
         return promise;
-        }
+
     }
 
     function login(user){

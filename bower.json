@@ -17,6 +17,7 @@
     "bootstrap": "~3.3.5",
     "handlebars": "~4.0.2",
     "jquery": "~2.1.4",
-    "sammy": "~0.7.6"
+    "sammy": "~0.7.6",
+    "toastr": "~2.1.2"
   }
 }

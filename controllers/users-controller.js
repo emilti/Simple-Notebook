@@ -5,21 +5,19 @@ var usersController = function() {
         templates.get('login')
             .then(function(template){
                 context.$element().html(template());
+                $('#btn-go-to-register-button').on('click', function(){
+                    context.redirect('#/users/register');
+                })
+
+                $('#btn-login').on('click', function(){
+                    data.users.login()
+                        .then(function(resUsers) {
+                            users = resUsers;
+                        })
+                })
             })
 
         var users;
-        $('#go-to-sign-up-button').on('click', function(){
-            this.redirect('#/users/register');
-        })
-
-
-        //$('#form-sign-in-button').on('click', function(){
-        //    data.users.login()
-        //        .then(function(resUsers) {
-        //            users = resUsers;
-        //        })
-        //})
-
     }
 
     function register(context) {
@@ -27,18 +25,31 @@ var usersController = function() {
             .then(function(template) {
                 context.$element().html(template());
 
+                $('#btn-already-registered').on('click', function(){
+                    context.redirect('#/users/login');
+                });
+
                 $('#btn-register').on('click', function() {
                     var user = {
-                        username: $('#tb-reg-username').val(),
-                        password: $('#tb-reg-pass').val()
+                        username: $('#tb-register-username').val(),
+                        password: $('#tb-register-passwordInitial').val()
                     };
 
-                    data.users.register(user)
-                        .then(function() {
-                            context.redirect('#/');
-                            document.location.reload(true);
-                        });
+                    if (user.password ===  $('#tb-register-passwordConfirmed').val()){
+                        data.users.register(user)
+                            .then(function() {
+                                toastr.success('User registered!');
+                                context.redirect('#/');
+                                // document.location.reload(true);
+                            });
+                    } else {
+                        toastr.error("Invalid password confirmation!")
+                        context.redirect('#/users/register');
+                    }
+
+
                 });
+
             });
     }
 
