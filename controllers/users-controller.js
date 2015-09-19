@@ -17,11 +17,11 @@ var usersController = function() {
                     data.users.login(userData)
                         .then(function(resUsers) {
                             toastr.success('User seccessfully logged in!');
+                            context.redirect('#/notebook');
+                            document.location.reload(true);
                         })
                 })
             })
-
-
     }
 
     function register(context) {
@@ -43,23 +43,26 @@ var usersController = function() {
                         data.users.register(userData)
                             .then(function() {
                                 toastr.success('User registered!');
-                                context.redirect('#/');
-                                // document.location.reload(true);
+                                context.redirect('#/notebook');
+                                document.location.reload(true);
                             });
                     } else {
                         toastr.error("Invalid password confirmation!")
                         context.redirect('#/users/register');
                     }
-
-
                 });
 
             });
     }
 
+    function logout(){
+        localStorage.removeItem('username');
+    }
+
     return {
         login: login,
-        register: register
+        register: register,
+        logout:logout
     };
 }();
 
