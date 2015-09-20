@@ -75,21 +75,11 @@ var data = (function(){
         return promise;
     }
 
-    function addNoteToDataStored(note) {
-        var promise = new Promise(function (resolve, reject) {
-            var user = Parse.User.current();
-            user.addUnique("dataStored", note);
-            user.save();
-        });
-        return promise;
-    }
-
 
     return {
         users:{
             register: register,
-            login: login,
-            addNoteToDataStored:addNoteToDataStored
+            login: login
         },
         notes:{
             addNote:addNote
