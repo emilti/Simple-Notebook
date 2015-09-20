@@ -29,7 +29,11 @@ var notebookController = function() {
                                 $('.btn-save-note').prop( "disabled", true );
                                 $('.btn-edit-note').prop( "disabled", false );
                                 $('.btn-add-note').prop( "disabled", false )
-                                // data.users.addNoteToDataStored(note);
+                                $('.current .note-title').prop("disabled", true);
+                                $('.current .note-title').css("border", "0");
+                                $('.current .note-content').prop("disabled", true);
+                                $('.current .note-content').css("border", "0");
+                                $('.notes-container').children().removeClass('current');
                             });
 
                     });
