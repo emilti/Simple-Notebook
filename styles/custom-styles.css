@@ -20,13 +20,22 @@ body{
     background-color: black;
 }
 
-#notes-wrapper {
-    position: absolute;
-    display: none;
-    padding: 0;
-    padding-left: 10%;
-    padding-top: 15%;
-    width: 90%;
+.notes-wrapper{
+    width:100%;
+    height:500px;
+    min-height:500px;
+    margin-top:5%;
+}
+
+.notes-wrapper .notes-container {
+    border: 2px solid grey;
     height: 100%;
-    border: 1px solid grey;
+}
+
+.buttons{
+    margin-bottom: 5px;
+}
+.notes-wrapper .button-container{
+    height: 100%;
+
 }
