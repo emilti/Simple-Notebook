@@ -44,11 +44,55 @@ var data = (function(){
         return promise;
     }
 
+    function addNote(noteData){
+
+        var Note = Parse.Object.extend("Note");
+        var user = Parse.User.current();
+        var storedNote = new Note({
+            title: noteData.title,
+            content: noteData.content,
+            user: user
+        });
+
+        var promise = new Promise(function(resolve, reject){
+        storedNote.save(null, {
+            success: function(note) {
+                // Execute any logic that should take place after the object is saved.
+                user.addUnique("dataStored", note);
+                user.save();
+                resolve(note);
+            },
+            error: function(gameScore, error) {
+                // Execute any logic that should take place if the save fails.
+                // error is a Parse.Error with an error code and message.
+
+                reject()
+            }
+        });
+        })
+
+
+        return promise;
+    }
+
+    function addNoteToDataStored(note) {
+        var promise = new Promise(function (resolve, reject) {
+            var user = Parse.User.current();
+            user.addUnique("dataStored", note);
+            user.save();
+        });
+        return promise;
+    }
+
 
     return {
         users:{
             register: register,
-            login: login
+            login: login,
+            addNoteToDataStored:addNoteToDataStored
+        },
+        notes:{
+            addNote:addNote
         }
     }
 }())
