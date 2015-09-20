@@ -15,7 +15,7 @@ var data = (function(){
             user.signUp(null, {
                 success: function (user) {
                     localStorage.setItem('username', userData.username);
-                    resolve();
+                    resolve(user);
                 },
                 error: function (user, error) {
                     alert("Error: " + error.code + " " + error.message);
@@ -29,50 +29,47 @@ var data = (function(){
 
     function login(userData){
         var promise = new Promise(function(resolve, reject){
+            console.log(userData.username);
+            console.log( userData.password);
             Parse.User.logIn(userData.username, userData.password, {
               success: function (user) {
                         localStorage.setItem('username', userData.username);
-                        resolve();
+                        resolve(user);
                     },
-                    error: function (user, error) {
+              error: function (user, error) {
                         alert("Error: " + error.code + " " + error.message);
                         reject();
                     }
                 });
             })
 
-        return promise;
+       return promise;
     }
 
     function addNote(noteData){
-
         var Note = Parse.Object.extend("Note");
-        var user = Parse.User.current();
-        var storedNote = new Note({
-            title: noteData.title,
-            content: noteData.content,
-            user: user
-        });
+        var note = new Note();
 
-        var promise = new Promise(function(resolve, reject){
-        storedNote.save(null, {
-            success: function(note) {
-                // Execute any logic that should take place after the object is saved.
-                user.addUnique("dataStored", note);
-                user.save();
-                resolve(note);
+        note.save({
+            title: noteData.title,
+            content:noteData.content,
+            user: Parse.User.current()
+        }, {
+            success: function(gameScore) {
+                $('.btn-save-note').prop( "disabled", true );
+                $('.btn-edit-note').prop( "disabled", false );
+                $('.btn-add-note').prop( "disabled", false )
+                $('.current .note-title').prop("disabled", true);
+                $('.current .note-title').css("border", "0");
+                $('.current .note-content').prop("disabled", true);
+                $('.current .note-content').css("border", "0");
+                $('.notes-container').children().removeClass('current');
             },
             error: function(gameScore, error) {
-                // Execute any logic that should take place if the save fails.
+                // The save failed.
                 // error is a Parse.Error with an error code and message.
-
-                reject()
             }
         });
-        })
-
-
-        return promise;
     }
 
 

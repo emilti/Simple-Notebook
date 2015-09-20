@@ -14,12 +14,14 @@ var usersController = function() {
                         username: $('#tb-login-username').val(),
                         password: $('#tb-login-password').val()
                     };
-                    data.users.login(userData)
-                        .then(function(resUsers) {
-                            toastr.success('User seccessfully logged in!');
+                   data.users.login(userData)
+                       .then(function(resUsers) {
+                        toastr.success('User successfully logged in!');
                             context.redirect('#/notebook');
                             document.location.reload(true);
-                        })
+                      },function(){
+                            toastr.error("Unsuccessful login")
+                      })
                 })
             })
     }
@@ -55,14 +57,10 @@ var usersController = function() {
             });
     }
 
-    function logout(){
-        localStorage.removeItem('username');
-    }
 
     return {
         login: login,
-        register: register,
-        logout:logout
+        register: register
     };
 }();
 
