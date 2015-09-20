@@ -12,7 +12,15 @@ var notebookController = function() {
                 );
 
                 $('.btn-add-note').on('click', function() {
-                    $('<div />').appendTo($('.notes-wrapper .notes-container')).addClass('note');
+                    $('<div />').append('<input type="text" value="" placeholder="title" class="title"/>').
+                        append('<textarea class="text-of-notes" placeholder="Enter your note..">').
+                        appendTo($('.notes-wrapper .notes-container')).addClass('note');
+                    $('.btn-add-note').prop( "disabled", true );
+                    $('.btn-save-note').prop( "disabled", false );
+                    $('.btn-edit-note').prop( "disabled", false );
+                    $('.btn-save-note').on( 'click', function(){
+
+                    });
                 });
             });
     }
