@@ -10,19 +10,24 @@ var usersController = function() {
                 })
 
                 $('#btn-login').on('click', function(){
+                    event.preventDefault();
                     var userData = {
                         username: $('#tb-login-username').val(),
                         password: $('#tb-login-password').val()
                     };
-                   data.users.login(userData)
-                       .then(function(resUsers) {
-                        toastr.success('User successfully logged in!');
+
+                    Parse.User.logIn(userData.username, userData.password, {
+                        success: function (user) {
+                            localStorage.setItem('username', userData.username);
+                            toastr.success('User successfully logged in!');
                             context.redirect('#/notebook');
                             document.location.reload(true);
-                      },function(){
-                            toastr.error("Unsuccessful login")
-                      })
+                        },
+                        error: function (user, error) {
+                        }
+                    });
                 })
+
             })
     }
 
@@ -42,12 +47,28 @@ var usersController = function() {
                     };
 
                     if (userData.password ===  $('#tb-register-passwordConfirmed').val()){
-                        data.users.register(userData)
-                            .then(function() {
-                                toastr.success('User registered!');
-                                context.redirect('#/notebook');
-                                document.location.reload(true);
+                        event.preventDefault();
+                        var loggedInUser = Parse.User.current();
+                        Parse.User.logOut();
+                        var user = new Parse.User();
+                        // updateMainDate(today);
+                        user.set("username", userData.username);
+                        user.set("password", userData.password);
+                        user.set("dataStored", []);
+                        user.signUp(null, {
+                               success: function (user) {
+                                    localStorage.setItem('username', userData.username);
+                                    toastr.success('User registered!');
+                                    context.redirect('#/notebook');
+                                    document.location.reload(true);
+                                },
+                                error: function (user, error) {
+                                    toastr.error("Unable to register!")
+                                }
                             });
+
+
+
                     } else {
                         toastr.error("Invalid password confirmation!")
                         context.redirect('#/users/register');

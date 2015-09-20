@@ -18,7 +18,6 @@ var data = (function(){
                     resolve(user);
                 },
                 error: function (user, error) {
-                    alert("Error: " + error.code + " " + error.message);
                     reject();
                 }
             });
@@ -37,7 +36,6 @@ var data = (function(){
                         resolve(user);
                     },
               error: function (user, error) {
-                        alert("Error: " + error.code + " " + error.message);
                         reject();
                     }
                 });
@@ -49,13 +47,12 @@ var data = (function(){
     function addNote(noteData){
         var Note = Parse.Object.extend("Note");
         var note = new Note();
-
         note.save({
             title: noteData.title,
             content:noteData.content,
             user: Parse.User.current()
         }, {
-            success: function(gameScore) {
+            success: function(note) {
                 $('.btn-save-note').prop( "disabled", true );
                 $('.btn-edit-note').prop( "disabled", false );
                 $('.btn-add-note').prop( "disabled", false )
@@ -64,8 +61,9 @@ var data = (function(){
                 $('.current .note-content').prop("disabled", true);
                 $('.current .note-content').css("border", "0");
                 $('.notes-container').children().removeClass('current');
+                return note;
             },
-            error: function(gameScore, error) {
+            error: function(note, error) {
                 // The save failed.
                 // error is a Parse.Error with an error code and message.
             }

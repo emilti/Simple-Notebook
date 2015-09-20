@@ -18,8 +18,8 @@
     </div>
 
     <div class="notes-container" >
-        <#each note>
+        {{#each note}}
         <input type="text" value={{this.title}} placeholder="title" class="note-title" disabled="" style="border: 0px;">
         <textarea class="note-content" placeholder="Enter your note.." style="resize: none; border: 0px;" disabled="">{{this.content}}</textarea>
-        <#each>
+        {{/each}}
     </div>
