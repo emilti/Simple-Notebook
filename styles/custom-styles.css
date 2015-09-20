@@ -37,5 +37,12 @@ body{
 }
 .notes-wrapper .button-container{
     height: 100%;
+}
 
+.note{
+    float:left;
+    margin:5px;
+    height:40%;
+    width:25%;
+    border: 1px solid grey;
 }

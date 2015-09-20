@@ -10,6 +10,10 @@ var notebookController = function() {
                         context.redirect('#/');
                     }
                 );
+
+                $('.btn-add-note').on('click', function() {
+                    $('<div />').appendTo($('.notes-wrapper .notes-container')).addClass('note');
+                });
             });
     }
 
