@@ -61,7 +61,7 @@ var notebookController = function() {
                          $('.current .note-content').prop("disabled", true);
                          $('.current .note-content').css("border", "0");
                          $('.notes-container').children().removeClass('current');
-                         console.log(note);
+                         toastr.success("Note saved!")
                          var user = Parse.User.current();
                          user.add("dataStored", note.id);
                          user.save();
