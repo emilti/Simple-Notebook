@@ -22,52 +22,42 @@ var data = (function(){
                 }
             });
         });
-        return promise;
 
+        return promise;
     }
 
-    function login(userData){
-        var promise = new Promise(function(resolve, reject){
-            console.log(userData.username);
-            console.log( userData.password);
+    function login(userData) {
+        var promise = new Promise(function (resolve, reject) {
             Parse.User.logIn(userData.username, userData.password, {
-              success: function (user) {
-                        localStorage.setItem('username', userData.username);
-                        resolve(user);
-                    },
-              error: function (user, error) {
-                        reject();
-                    }
-                });
-            })
-
-       return promise;
+                success: function (user) {
+                    localStorage.setItem('username', userData.username);
+                    resolve(user)
+                },
+                error: function (error) {
+                    reject()
+                }
+            });
+        })
+        return promise;
     }
 
     function addNote(noteData){
+        var promise = new Promise(function (resolve, reject) {
         var Note = Parse.Object.extend("Note");
         var note = new Note();
         note.save({
             title: noteData.title,
-            content:noteData.content,
-            user: Parse.User.current()
+            content:noteData.content
         }, {
             success: function(note) {
-                $('.btn-save-note').prop( "disabled", true );
-                $('.btn-edit-note').prop( "disabled", false );
-                $('.btn-add-note').prop( "disabled", false )
-                $('.current .note-title').prop("disabled", true);
-                $('.current .note-title').css("border", "0");
-                $('.current .note-content').prop("disabled", true);
-                $('.current .note-content').css("border", "0");
-                $('.notes-container').children().removeClass('current');
-                return note;
+                resolve(note);
             },
             error: function(note, error) {
-                // The save failed.
-                // error is a Parse.Error with an error code and message.
+                reject();
             }
         });
+    });
+        return promise;
     }
 
 
