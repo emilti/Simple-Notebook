@@ -22,18 +22,17 @@ var notebookController = function() {
                         if (notesFromServer.length === collection.length){
                             var sortedNotesFromServer = _.sortBy(notesFromServer, 'position');
                             for (var j = 0; j < sortedNotesFromServer.length; j+=1) {
-                                $('<div />').append('<input type="text" value="" class="note-title"/>')
-                                    .append('<textarea class="note-content" style="resize:none">')
+                                $('<div />').append('<div class="panel-heading"/>')
+                                    .append('<div class="panel-body"/>')
                                     .appendTo($('.notes-container'))
                                     .addClass('note')
-                                    .addClass('current');
+                                    .addClass('current')
+                                    .addClass('panel')
+                                    .addClass('panel-primary');
+                                $('.current .panel-heading').append('<h3 class="panel-title"/>')
                                 console.log(sortedNotesFromServer[j]);
-                                $('.current input').val(sortedNotesFromServer[j].title);
-                                $('.current textarea').html(sortedNotesFromServer[j].content);
-                                $('.current .note-title').prop("disabled", true);
-                                $('.current .note-title').css("border", "0");
-                                $('.current .note-content').prop("disabled", true);
-                                $('.current .note-content').css("border", "0");
+                                $('.current .panel-title').html(sortedNotesFromServer[j].title);
+                                $('.current .panel-body').html(sortedNotesFromServer[j].content);
                                 $('.notes-container').children().removeClass('current');
                             }
                         }
@@ -41,12 +40,15 @@ var notebookController = function() {
                 }
 
                 $('.btn-add-note').on('click', function () {
-
-                     $('<div />').append('<input type="text" value="" placeholder="title" class="note-title"/>')
-                         .append('<textarea class="note-content" placeholder="Enter your note.." style="resize:none">')
+                     $('<div />').append('<div class="panel-heading"/>')
+                         .append('<div class="panel-body"/>')
                          .appendTo($('.notes-container'))
                          .addClass('note')
-                         .addClass('current');
+                         .addClass('current')
+                         .addClass('panel')
+                         .addClass('panel-primary');
+                    $('.current .panel-heading').append('<input type="text" value="" placeholder="title" class="note-title"/>')
+                    $('.current .panel-body').append('<textarea class="note-content" placeholder="Enter your note.." style="resize:none">')
                      $('.btn-add-note').prop("disabled", true);
                     $('.btn-save-note').prop("disabled", false);
                     $('.btn-edit-note').prop("disabled", true);
