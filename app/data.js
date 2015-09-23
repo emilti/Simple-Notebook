@@ -60,13 +60,14 @@ var data = (function(){
         return promise;
     }
 
-    function getNotes(id){
+    function getNotes(id, notesFromServer){
         var promise = new Promise(function (resolve, reject) {
             var Note = Parse.Object.extend("Note");
             var query = new Parse.Query(Note);
             query.get(id, {
                 success: function (Note) {
-                    resolve(Note)
+                    notesFromServer.push(Note);
+                    resolve(Note, notesFromServer)
                 },
                 error: function (object, error) {
                     reject();
