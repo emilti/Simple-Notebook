@@ -1,39 +1,47 @@
 var notebookController = function() {
     function getNotes(context) {
-        var notesFromServer;
+        var notesFromServer, count = 0;
         templates.get('notebook')
             .then(function (template) {
                 context.$element().html(template());
                 var loggedInUser = Parse.User.current();
                 var collection = loggedInUser.get('dataStored');
+                count = collection.length;
                 var notesFromServer = [];
                 for (var i = 0; i < collection.length; i++) {
                 data.notes.getNotes(collection[i], notesFromServer)
-                    .then(function(Note, notesFromServer){
+                    .then(function(Note){
                         var obj = {
                             title: Note.get('title'),
-                            content: Note.get('content')
+                            content: Note.get('content'),
+                            position: Note.get('position')
                         };
-                         $('<div />').append('<input type="text" value="" class="note-title"/>')
-                             .append('<textarea class="note-content" style="resize:none">')
-                             .appendTo($('.notes-container'))
-                             .addClass('note')
-                             .addClass('current');
-                         $('.current input').val(obj.title);
-                         $('.current textarea').html(obj.content);
-                         $('.current .note-title').prop("disabled", true);
-                         $('.current .note-title').css("border", "0");
-                         $('.current .note-content').prop("disabled", true);
-                         $('.current .note-content').css("border", "0");
-                         $('.notes-container').children().removeClass('current');
+                        notesFromServer.push(obj);
                         }, function(){
-                    // The object was not retrieved successfully.
-                    // error is a Parse.Error with an error code and message.
+                    }).then(function(){
+                        if (notesFromServer.length === collection.length){
+                            var sortedNotesFromServer = _.sortBy(notesFromServer, 'position');
+                            for (var j = 0; j < sortedNotesFromServer.length; j+=1) {
+                                $('<div />').append('<input type="text" value="" class="note-title"/>')
+                                    .append('<textarea class="note-content" style="resize:none">')
+                                    .appendTo($('.notes-container'))
+                                    .addClass('note')
+                                    .addClass('current');
+                                console.log(sortedNotesFromServer[j]);
+                                $('.current input').val(sortedNotesFromServer[j].title);
+                                $('.current textarea').html(sortedNotesFromServer[j].content);
+                                $('.current .note-title').prop("disabled", true);
+                                $('.current .note-title').css("border", "0");
+                                $('.current .note-content').prop("disabled", true);
+                                $('.current .note-content').css("border", "0");
+                                $('.notes-container').children().removeClass('current');
+                            }
+                        }
                     })
                 }
 
-                console.log("notes from server" + notesFromServer);
                 $('.btn-add-note').on('click', function () {
+
                      $('<div />').append('<input type="text" value="" placeholder="title" class="note-title"/>')
                          .append('<textarea class="note-content" placeholder="Enter your note.." style="resize:none">')
                          .appendTo($('.notes-container'))
@@ -45,9 +53,11 @@ var notebookController = function() {
                 });
 
                 $('.btn-save-note').on('click', function () {
+                    count++;
                      var noteData = {
                         title: ($('.current .note-title').val()),
-                        content: ($('.current .note-content').val())
+                        content: ($('.current .note-content').val()),
+                       position: count
                      }
 
                     data.notes.addNote(noteData)
@@ -75,12 +85,7 @@ var notebookController = function() {
                      context.redirect('#/');
                 }
              );
-         });
-
-         console.log('Notes from server' + notesFromServer);
-
-
-
+         })
      }
 
 

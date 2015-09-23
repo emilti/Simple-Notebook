@@ -47,7 +47,8 @@ var data = (function(){
         var note = new Note();
         note.save({
             title: noteData.title,
-            content:noteData.content
+            content:noteData.content,
+            position:noteData.position
         }, {
             success: function(note) {
                 resolve(note);
@@ -60,14 +61,13 @@ var data = (function(){
         return promise;
     }
 
-    function getNotes(id, notesFromServer){
+    function getNotes(id){
         var promise = new Promise(function (resolve, reject) {
             var Note = Parse.Object.extend("Note");
             var query = new Parse.Query(Note);
             query.get(id, {
-                success: function (Note) {
-                    notesFromServer.push(Note);
-                    resolve(Note, notesFromServer)
+                success: function (Note) {                    ;
+                    resolve(Note)
                 },
                 error: function (object, error) {
                     reject();
