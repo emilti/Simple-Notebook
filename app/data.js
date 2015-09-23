@@ -60,6 +60,22 @@ var data = (function(){
         return promise;
     }
 
+    function getNotes(id){
+        var promise = new Promise(function (resolve, reject) {
+            var Note = Parse.Object.extend("Note");
+            var query = new Parse.Query(Note);
+            query.get(id, {
+                success: function (Note) {
+                    resolve(Note)
+                },
+                error: function (object, error) {
+                    reject();
+                }
+        })
+    })
+        return promise;
+    }
+
 
     return {
         users:{
@@ -67,7 +83,8 @@ var data = (function(){
             login: login
         },
         notes:{
-            addNote:addNote
+            addNote:addNote,
+            getNotes: getNotes
         }
     }
 }())

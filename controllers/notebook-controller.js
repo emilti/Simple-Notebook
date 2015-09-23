@@ -8,10 +8,8 @@ var notebookController = function() {
         var collection = loggedInUser.get('dataStored');
         var notesFromServer = [];
         for (var i = 0; i < collection.length; i++) {
-            var Note = Parse.Object.extend("Note");
-            var query = new Parse.Query(Note);
-            query.get(collection[i], {
-                success: function (Note) {
+            data.notes.getNotes(collection[i])
+                .then(function(Note){
                     var obj = {
                         title: Note.get('title'),
                         content: Note.get('content')
@@ -27,13 +25,12 @@ var notebookController = function() {
                     $('.current .note-content').prop("disabled", true);
                     $('.current .note-content').css("border", "0");
                     $('.notes-container').children().removeClass('current');
-                },
-                error: function (object, error) {
+                }, function(){
                     // The object was not retrieved successfully.
                     // error is a Parse.Error with an error code and message.
-                }
-            });
+                })
         }
+
              $('.btn-add-note').on('click', function () {
                  $('<div />').append('<input type="text" value="" placeholder="title" class="note-title"/>').
                      append('<textarea class="note-content" placeholder="Enter your note.." style="resize:none">').
