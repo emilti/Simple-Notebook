@@ -17,12 +17,22 @@
 }
 
 body{
+    height:100vh;
     background-color: black;
 }
+#content{
+    height:100%
+}
 
-.notes-container {
+#content .logout-row{
+    height:5%;
+}
+#content .button-container{
+    height:5%;
+}
+#content .notes-container {
     border: 2px solid grey;
-    height: 500px;
+    height: 50%;
     width:90%;
     margin-left:5%;
     background-color: #D7D7D7;
@@ -45,6 +55,7 @@ body{
 .note-title{
     margin:1%;
     width:98%;
+    height:10%;
     outline: 0;
     color:black;
     background-color:#D7D7D7;;
@@ -63,6 +74,25 @@ body{
     background-color:#D7D7D7;;
     border: 1px solid white;
 }
+
+.panel-heading{
+    height:20%;
+}
+
+.panel-body{
+    height:60%;
+}
+
+.operation-buttons div{
+    height:10%;
+    padding:1%;
+
+}
+
+.operation-buttons button{
+    margin:5px;
+}
+
 
 
 

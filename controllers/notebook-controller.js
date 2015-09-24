@@ -33,6 +33,10 @@ var notebookController = function() {
                                 console.log(sortedNotesFromServer[j]);
                                 $('.current .panel-title').html(sortedNotesFromServer[j].title);
                                 $('.current .panel-body').html(sortedNotesFromServer[j].content);
+                                $('.current').append('<div class="operation-buttons row"/>')
+                                $('.current .operation-buttons').append('<div class="col-md-offset-5 col-md-2"><button class="btn btn-md btn-success form-control btn-save-note" disabled>Save</div>')
+                                    .append('<div class="col-md-2"><button class="btn btn-md btn-primary form-control btn-edit-note">Edit</button></div>')
+                                    .append('<div class="col-md-2"><button class="btn btn-md btn-danger form-control btn-edit-note">Delete</button></div>')
                                 $('.notes-container').children().removeClass('current');
                             }
                         }
@@ -47,10 +51,13 @@ var notebookController = function() {
                          .addClass('current')
                          .addClass('panel')
                          .addClass('panel-primary');
-                    // $('.current .panel-heading').append('<input type="text" value="" placeholder="title" class="note-title form-control" />')
-                    // $('.current .panel-body').append('<textarea class="note-content form-control" rows="3" placeholder="Enter your note.." style="resize:none">')
+                    $('.current').append('<div class="operation-buttons row"/>')
+                    $('.current .operation-buttons').append('<div class="col-md-offset-5 col-md-2"><button class="btn btn-md btn-success form-control btn-save-note" disabled>Save</div>')
+                        .append('<div class="col-md-2"><button class="btn btn-md btn-primary form-control btn-edit-note">Edit</button></div>')
+                        .append('<div class="col-md-2"><button class="btn btn-md btn-danger form-control btn-edit-note">Delete</button></div>')
+
                      $('.btn-add-note').prop("disabled", true);
-                    $('.btn-save-note').prop("disabled", false);
+                    $('.current .btn-save-note').prop("disabled", false);
                     $('.btn-edit-note').prop("disabled", true);
                 });
 
@@ -66,16 +73,11 @@ var notebookController = function() {
                         .then(function(note){
                             var noteTitle =  $('.current .note-title').val();
                             var noteContent = $('.current .note-content').val();
-                            $('.btn-save-note').prop("disabled", true);
-                            $('.btn-edit-note').prop("disabled", false);
+                            $('.current .btn-save-note').prop("disabled", true);
+                            $('.current .btn-edit-note').prop("disabled", false);
                             $('.btn-add-note').prop("disabled", false);
                             $('.current .note-title').remove();
                             $('.current .note-content').remove();
-
-                            // $('.current .note-title').prop("disabled", true);
-                            // $('.current .note-title').css("border", "0");
-                            // $('.current .note-content').prop("disabled", true);
-                            // $('.current .note-content').css("border", "0");
                             $('.current').append('<div class="panel-heading"/>')
                                 .append('<div class="panel-body"/>')
                                 .appendTo($('.notes-container'))
@@ -102,6 +104,12 @@ var notebookController = function() {
                 }
              );
          })
+
+        function appendingButtons() {
+            $('.current .operation-buttons').append('<div class="col-md-offset-5 col-md-2"><button class="btn btn-md btn-success form-control btn-save-note" disabled>Save</div>')
+                .append('<div class="col-md-2"><button class="btn btn-md btn-primary form-control btn-edit-note">Edit</button></div>')
+                .append('<div class="col-md-2"><button class="btn btn-md btn-danger form-control btn-edit-note">Delete</button></div>')
+        }
      }
     return {
         getNotes: getNotes
