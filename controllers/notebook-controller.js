@@ -40,15 +40,15 @@ var notebookController = function() {
                 }
 
                 $('.btn-add-note').on('click', function () {
-                     $('<div />').append('<div class="panel-heading"/>')
-                         .append('<div class="panel-body"/>')
+                     $('<div />').append('<input type="text" value="" placeholder="title" class="note-title form-control" />')
+                         .append('<textarea class="note-content form-control" rows="4" placeholder="Enter your note.." style="resize:none">')
                          .appendTo($('.notes-container'))
                          .addClass('note')
                          .addClass('current')
                          .addClass('panel')
                          .addClass('panel-primary');
-                    $('.current .panel-heading').append('<input type="text" value="" placeholder="title" class="note-title"/>')
-                    $('.current .panel-body').append('<textarea class="note-content" placeholder="Enter your note.." style="resize:none">')
+                    // $('.current .panel-heading').append('<input type="text" value="" placeholder="title" class="note-title form-control" />')
+                    // $('.current .panel-body').append('<textarea class="note-content form-control" rows="3" placeholder="Enter your note.." style="resize:none">')
                      $('.btn-add-note').prop("disabled", true);
                     $('.btn-save-note').prop("disabled", false);
                     $('.btn-edit-note').prop("disabled", true);
@@ -66,7 +66,7 @@ var notebookController = function() {
                         .then(function(note){
                             $('.btn-save-note').prop("disabled", true);
                             $('.btn-edit-note').prop("disabled", false);
-                            $('.btn-add-note').prop("disabled", false)
+                            $('.btn-add-note').prop("disabled", false);
                             $('.current .note-title').prop("disabled", true);
                             $('.current .note-title').css("border", "0");
                             $('.current .note-content').prop("disabled", true);
@@ -89,8 +89,6 @@ var notebookController = function() {
              );
          })
      }
-
-
     return {
         getNotes: getNotes
     };
