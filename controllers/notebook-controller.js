@@ -56,8 +56,8 @@ var notebookController = function() {
                         .append('<div class="col-md-2"><button class="btn btn-md btn-primary form-control btn-edit-note">Edit</button></div>')
                         .append('<div class="col-md-2"><button class="btn btn-md btn-danger form-control btn-edit-note">Delete</button></div>')
 
-                     $('.btn-add-note').prop("disabled", true);
-                    $('.current .btn-save-note').prop("disabled", false);
+                    $('.btn-add-note').prop("disabled", true);
+                    $('.btn-save-note').prop("disabled", false);
                     $('.btn-edit-note').prop("disabled", true);
                 });
 
@@ -78,8 +78,8 @@ var notebookController = function() {
                             $('.btn-add-note').prop("disabled", false);
                             $('.current .note-title').remove();
                             $('.current .note-content').remove();
-                            $('.current').append('<div class="panel-heading"/>')
-                                .append('<div class="panel-body"/>')
+                            $('.current').prepend('<div class="panel-body"/>')
+                                .prepend('<div class="panel-heading"/>')
                                 .appendTo($('.notes-container'))
                                 .addClass('note')
                                 .addClass('panel')
