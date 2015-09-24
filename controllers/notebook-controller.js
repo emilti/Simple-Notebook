@@ -40,7 +40,7 @@ var notebookController = function() {
                 }
 
                 $('.btn-add-note').on('click', function () {
-                     $('<div />').append('<input type="text" value="" placeholder="title" class="note-title form-control" />')
+                     $('<div />').append('<input type="text" value="" placeholder="Enter title" class="note-title form-control" />')
                          .append('<textarea class="note-content form-control" rows="4" placeholder="Enter your note.." style="resize:none">')
                          .appendTo($('.notes-container'))
                          .addClass('note')
@@ -64,13 +64,27 @@ var notebookController = function() {
 
                     data.notes.addNote(noteData)
                         .then(function(note){
+                            var noteTitle =  $('.current .note-title').val();
+                            var noteContent = $('.current .note-content').val();
                             $('.btn-save-note').prop("disabled", true);
                             $('.btn-edit-note').prop("disabled", false);
                             $('.btn-add-note').prop("disabled", false);
-                            $('.current .note-title').prop("disabled", true);
-                            $('.current .note-title').css("border", "0");
-                            $('.current .note-content').prop("disabled", true);
-                            $('.current .note-content').css("border", "0");
+                            $('.current .note-title').remove();
+                            $('.current .note-content').remove();
+
+                            // $('.current .note-title').prop("disabled", true);
+                            // $('.current .note-title').css("border", "0");
+                            // $('.current .note-content').prop("disabled", true);
+                            // $('.current .note-content').css("border", "0");
+                            $('.current').append('<div class="panel-heading"/>')
+                                .append('<div class="panel-body"/>')
+                                .appendTo($('.notes-container'))
+                                .addClass('note')
+                                .addClass('panel')
+                                .addClass('panel-primary');
+                            $('.current .panel-heading').append('<h3 class="panel-title"/>');
+                            $('.current .panel-title').html(noteTitle);
+                            $('.current .panel-body').html(noteContent);
                             $('.notes-container').children().removeClass('current');
                             toastr.success("Note saved!")
                             var user = Parse.User.current();
