@@ -54,8 +54,8 @@ var notebookController = function() {
                     appendingButtons();
                     saveNote()
                     $('.btn-add-note').prop("disabled", true);
-                    $('.btn-save-note').prop("disabled", false);
-                    $('.btn-edit-note').prop("disabled", true);
+                    $('.current .btn-save-note').prop("disabled", false);
+                    $('.current .btn-edit-note').prop("disabled", true);
                 });
 
                 function saveNote() {
