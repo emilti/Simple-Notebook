@@ -31,6 +31,8 @@ var data = (function(){
             Parse.User.logIn(userData.username, userData.password, {
                 success: function (user) {
                     localStorage.setItem('username', userData.username);
+                    // localStorage.setItem('dataStored', userData.dataStored);
+
                     resolve(user)
                 },
                 error: function (error) {
@@ -41,7 +43,7 @@ var data = (function(){
         return promise;
     }
 
-    function addNote(noteData){
+    function saveNote(noteData){
         var promise = new Promise(function (resolve, reject) {
         var Note = Parse.Object.extend("Note");
         var note = new Note();
@@ -84,7 +86,7 @@ var data = (function(){
             login: login
         },
         notes:{
-            addNote:addNote,
+            saveNote: saveNote,
             getNotes: getNotes
         }
     }

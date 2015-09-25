@@ -33,6 +33,7 @@ body{
 #content .notes-container {
     border: 2px solid grey;
     height: 50%;
+    min-height: 600px;
     width:90%;
     margin-left:5%;
     background-color: #D7D7D7;
@@ -94,7 +95,6 @@ body{
 .operation-buttons div{
     height:10%;
     padding:1%;
-
 }
 
 .operation-buttons button{

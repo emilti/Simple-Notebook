@@ -5,11 +5,18 @@ var notebookController = function() {
             .then(function (template) {
                 context.$element().html(template());
                 var loggedInUser = Parse.User.current();
-                var collection = loggedInUser.get('dataStored');
-                count = collection.length;
                 var notesFromServer = [];
+
+                if (localStorage.getItem('dataStored') !== null){
+                    var collection = JSON.parse(localStorage.getItem('dataStored'));
+                } else {
+                    collection = loggedInUser.get('dataStored');
+                }
+
+                count = collection.length;
+                localStorage.setItem('dataStored', JSON.stringify(collection));
                 for (var i = 0; i < collection.length; i++) {
-                data.notes.getNotes(collection[i], notesFromServer)
+                data.notes.getNotes(collection[i])
                     .then(function(Note){
                         var obj = {
                             title: Note.get('title'),
@@ -67,7 +74,7 @@ var notebookController = function() {
                             position: count
                         }
 
-                        data.notes.addNote(noteData)
+                        data.notes.saveNote(noteData)
                             .then(function (note) {
                                 var noteTitle = $('.current .note-title').val();
                                 var noteContent = $('.current .note-content').val();
@@ -91,6 +98,11 @@ var notebookController = function() {
                                 var user = Parse.User.current();
                                 user.add("dataStored", note.id);
                                 user.save();
+                                Parse.User.current().fetch();
+                                var collectionFromStorage = localStorage.getItem('dataStored');
+                                collectionFromStorage = (collectionFromStorage === null) ? [] : JSON.parse(collectionFromStorage);
+                                collectionFromStorage.push(note.id);
+                                localStorage.setItem('dataStored', JSON.stringify(collectionFromStorage));
                             }, function () {
                                 toastr.error("Unsuccessful adding of a note!")
                             })
