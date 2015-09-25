@@ -68,7 +68,7 @@ body{
     padding: 5%;
     margin:1%;
     width:98%;
-    height:80%;
+    height:50%;
     outline: 0;
     color:black;
     background-color:#D7D7D7;;
@@ -80,6 +80,14 @@ body{
 }
 
 .panel-body{
+    height:60%;
+}
+
+.adding-heading{
+    height:18%;
+}
+
+.adding-body{
     height:60%;
 }
 
