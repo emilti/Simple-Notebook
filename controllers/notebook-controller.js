@@ -7,6 +7,7 @@ var notebookController = function() {
                 var loggedInUser = Parse.User.current();
                 var notesFromServer = [], sortedNotesFromServer;
 
+                $('.username').html(localStorage.getItem('username'));
                 if (localStorage.getItem('dataStored') !== null){
                     var collection = JSON.parse(localStorage.getItem('dataStored'));
                 } else {
@@ -45,7 +46,7 @@ var notebookController = function() {
                                 $('.notes-container').children().removeClass('current');
                             }
                         }
-                    })
+
                         editNote();
 
                         $('.btn-save-note').on('click', function () {
@@ -64,16 +65,29 @@ var notebookController = function() {
                                 });
                         });
 
+                        $('.btn-delete-note').on('click',function(){
+                            var $this = $(this);
+                            var idOfDeletedElement;
+                            $this.parent().parent().parent().addClass('current');
+                            var $allElementsBeforeCurrent = $('.current').prevAll();
+                            var lengthPrev = $allElementsBeforeCurrent.length;
+                            $('.current').remove();
+
+                            var collectionFromStorage = localStorage.getItem('dataStored');
+                            collectionFromStorage = (collectionFromStorage === null) ? [] : JSON.parse(collectionFromStorage);
+                            collectionFromStorage.splice(lengthPrev, 1);
+                            localStorage.setItem('dataStored', JSON.stringify(collectionFromStorage));
+
+                            var dataStored = loggedInUser.get('dataStored');
+                            idOfDeletedElement = dataStored[lengthPrev];
+                            dataStored.splice(lengthPrev, 1);
+                            loggedInUser.set('dataStored',dataStored)
+                            loggedInUser.save();
+                        });
+
+                    })
                 }
 
-
-
-
-
-                // $('.btn-delete-note').on('click',function(){
-                //    var $this = $(this);
-                //    $this.parent().parent().parent().addClass('current');
-                //});
 
                 $('.btn-add-note').on('click', function () {
                      $('<div />').append('<div class="adding-heading"><input type="text" value="" placeholder="Enter title" class="note-title form-control" /></div>')
@@ -85,6 +99,7 @@ var notebookController = function() {
                          .addClass('panel-primary');
                     $('.current').append('<div class="operation-buttons row"/>')
                     appendingButtons();
+                    $('.current .operation-buttons .btn-save-note').addClass('btn-current-save-note').remove
                     initialSaveNote()
                     $('.btn-add-note').prop("disabled", true);
                     $('.current .btn-save-note').prop("disabled", false);
@@ -93,14 +108,13 @@ var notebookController = function() {
                 });
 
                 function initialSaveNote() {
-                    $('.btn-save-note').on('click', function () {
+                    $('.btn-current-save-note').on('click', function () {
                         count++;
                         var noteData = {
                             title: ($('.current .note-title').val()),
                             content: ($('.current .note-content').val()),
                             position: count
                         }
-
                         data.notes.initialSaveNote(noteData)
                             .then(function (note) {
                                 updateDOMAfterSave(note)
@@ -115,11 +129,18 @@ var notebookController = function() {
                                 localStorage.setItem('dataStored', JSON.stringify(collectionFromStorage));
 
                                 // Temporary fix for editing notes issue
-                                // window.location.reload(true);
+                                //window.location.reload(true);
+                                $('.btn-save-note').removeClass('btn-current-save-note')
+
                             }, function () {
                                 toastr.error("Unsuccessful adding of a note!")
-                            })
-                    });
+                            }).then(function(){
+                                location.reload(true);
+                            });
+                    })
+
+
+                    // editNote();
                 }
 
                 function editNote() {
