@@ -21,7 +21,8 @@ var notebookController = function() {
                         var obj = {
                             title: Note.get('title'),
                             content: Note.get('content'),
-                            position: Note.get('position')
+                            position: Note.get('position'),
+                            id: Note.id
                         };
                         notesFromServer.push(obj);
                         }, function(){
@@ -36,8 +37,7 @@ var notebookController = function() {
                                     .addClass('current')
                                     .addClass('panel')
                                     .addClass('panel-primary');
-                                $('.current .panel-heading').append('<h3 class="panel-title"/>')
-                                console.log(sortedNotesFromServer[j]);
+                                $('.current .panel-heading').append('<h3 class="panel-title"/>');
                                 $('.current .panel-title').html(sortedNotesFromServer[j].title);
                                 $('.current .panel-body').html(sortedNotesFromServer[j].content);
                                 $('.current').append('<div class="operation-buttons row"/>')
@@ -47,8 +47,10 @@ var notebookController = function() {
                         }
 
                         $('.btn-edit-note').on('click', function () {
+                            console.log(sortedNotesFromServer);
                             var $this = $(this);
                             $this.parent().parent().parent().addClass('current');
+
                             $('.btn-edit-note').prop("disabled", true);
                             $('.current .btn-save-note').prop("disabled", false);
 
@@ -56,7 +58,7 @@ var notebookController = function() {
                             var currentTitle = $('.current .panel-title').html();
                             var currentContent = $('.current .panel-body').html();
 
-                            // removing the note elements and adding the elements for editing - input field and textarea
+                            // removing the note elements and adding int the note the elements for editing - input field and textarea
                             $('.current .panel-heading').remove();
                             $('.current .panel-body').remove();
                             $('.current').prepend('<div class="adding-body"/>')
@@ -65,7 +67,24 @@ var notebookController = function() {
                             $('.current').prepend('<div class="adding-heading"/>');
                             $('.current .adding-heading').append('<input type="text" />');
                             $('.current .adding-heading input').addClass('note-title form-control').val(currentTitle);
-                            saveNote();
+
+                            var $allElementsBeforeCurrent = $('.current').prevAll();
+                            var lengthPrev = $allElementsBeforeCurrent.length;
+
+
+                            $('.btn-save-note').on('click', function () {
+                                var noteData = {
+                                    title: ($('.current .note-title').val()),
+                                    content: ($('.current .note-content').val()),
+                                    position: lengthPrev + 1,
+                                    id: sortedNotesFromServer[lengthPrev].id
+                                }
+                                data.notes.saveNoteAfterEdit(noteData)
+                                    .then(function(){
+                                        updateDOMAfterSave()
+                                        toastr.success("Note edited");
+                                    });
+                            });
                         });
                     })
                 }
@@ -80,13 +99,13 @@ var notebookController = function() {
                          .addClass('panel-primary');
                     $('.current').append('<div class="operation-buttons row"/>')
                     appendingButtons();
-                    saveNote()
+                    initialSaveNote()
                     $('.btn-add-note').prop("disabled", true);
                     $('.current .btn-save-note').prop("disabled", false);
                     $('.current .btn-edit-note').prop("disabled", true);
                 });
 
-                function saveNote() {
+                function initialSaveNote() {
                     $('.btn-save-note').on('click', function () {
                         count++;
                         var noteData = {
@@ -95,26 +114,9 @@ var notebookController = function() {
                             position: count
                         }
 
-                        data.notes.saveNote(noteData)
+                        data.notes.initialSaveNote(noteData)
                             .then(function (note) {
-                                var noteTitle = $('.current .note-title').val();
-                                var noteContent = $('.current .note-content').val();
-                                $('.current .btn-save-note').prop("disabled", true);
-                                $('.current .btn-edit-note').prop("disabled", false);
-                                $('.btn-add-note').prop("disabled", false);
-                                $('.current .adding-heading').remove();
-                                $('.current .adding-body').remove();
-                                 $('.current')
-                                     .prepend('<div class="panel-body"/>')
-                                    .prepend('<div class="panel-heading"/>')
-                                    .appendTo($('.notes-container'))
-                                    .addClass('note')
-                                    .addClass('panel')
-                                    .addClass('panel-primary');
-                                $('.current .panel-heading').append('<h3 class="panel-title"/>');
-                                $('.current .panel-title').html(noteTitle);
-                                $('.current .panel-body').html(noteContent);
-                                $('.notes-container').children().removeClass('current');
+                                updateDOMAfterSave(note)
                                 toastr.success("Note saved!")
                                 var user = Parse.User.current();
                                 user.add("dataStored", note.id);
@@ -128,6 +130,28 @@ var notebookController = function() {
                                 toastr.error("Unsuccessful adding of a note!")
                             })
                     });
+                }
+
+
+                function updateDOMAfterSave(){
+                    var noteTitle = $('.current .note-title').val();
+                    var noteContent = $('.current .note-content').val();
+                    $('.current .btn-save-note').prop("disabled", true);
+                    $('.btn-edit-note').prop("disabled", false);
+                    $('.btn-add-note').prop("disabled", false);
+                    $('.current .adding-heading').remove();
+                    $('.current .adding-body').remove();
+                    $('.current')
+                        .prepend('<div class="panel-body"/>')
+                        .prepend('<div class="panel-heading"/>')
+                        .appendTo($('.notes-container'))
+                        .addClass('note')
+                        .addClass('panel')
+                        .addClass('panel-primary');
+                    $('.current .panel-heading').append('<h3 class="panel-title"/>');
+                    $('.current .panel-title').html(noteTitle);
+                    $('.current .panel-body').html(noteContent);
+                    $('.notes-container').children().removeClass('current');
                 }
 
                 $('#btn-logout').on('click', function () {

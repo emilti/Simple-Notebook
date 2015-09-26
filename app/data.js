@@ -43,7 +43,7 @@ var data = (function(){
         return promise;
     }
 
-    function saveNote(noteData){
+    function initialSaveNote(noteData){
         var promise = new Promise(function (resolve, reject) {
         var Note = Parse.Object.extend("Note");
         var note = new Note();
@@ -62,6 +62,27 @@ var data = (function(){
     });
         return promise;
     }
+
+    function saveNoteAfterEdit(noteData){
+        var promise = new Promise(function (resolve, reject) {
+        var Note = Parse.Object.extend("Note");
+        var query = new Parse.Query(Note);
+        query.equalTo("objectId", noteData.id);
+        query.first({
+            success: function(object) {
+                object.set("title", noteData.title);
+                object.set("content", noteData.content);
+                object.save();
+                resolve();
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+    })
+        return promise;
+    }
+
 
     function getNotes(id){
         var promise = new Promise(function (resolve, reject) {
@@ -86,7 +107,8 @@ var data = (function(){
             login: login
         },
         notes:{
-            saveNote: saveNote,
+            initialSaveNote: initialSaveNote,
+            saveNoteAfterEdit: saveNoteAfterEdit,
             getNotes: getNotes
         }
     }
