@@ -5,7 +5,7 @@ var notebookController = function() {
             .then(function (template) {
                 context.$element().html(template());
                 var loggedInUser = Parse.User.current();
-                var notesFromServer = [];
+                var notesFromServer = [], sortedNotesFromServer;
 
                 if (localStorage.getItem('dataStored') !== null){
                     var collection = JSON.parse(localStorage.getItem('dataStored'));
@@ -28,7 +28,7 @@ var notebookController = function() {
                         }, function(){
                     }).then(function(){
                         if (notesFromServer.length === collection.length){
-                            var sortedNotesFromServer = _.sortBy(notesFromServer, 'position');
+                            sortedNotesFromServer = _.sortBy(notesFromServer, 'position');
                             for (var j = 0; j < sortedNotesFromServer.length; j+=1) {
                                 $('<div />').append('<div class="panel-heading"/>')
                                     .append('<div class="panel-body"/>')
@@ -45,29 +45,8 @@ var notebookController = function() {
                                 $('.notes-container').children().removeClass('current');
                             }
                         }
-
-                        $('.btn-edit-note').on('click', function () {
-                            console.log(sortedNotesFromServer);
-                            var $this = $(this);
-                            $this.parent().parent().parent().addClass('current');
-
-                            $('.btn-edit-note').prop("disabled", true);
-                            $('.current .btn-save-note').prop("disabled", false);
-
-                            // Getting the current data from the edited note
-                            var currentTitle = $('.current .panel-title').html();
-                            var currentContent = $('.current .panel-body').html();
-
-                            // removing the note elements and adding int the note the elements for editing - input field and textarea
-                            $('.current .panel-heading').remove();
-                            $('.current .panel-body').remove();
-                            $('.current').prepend('<div class="adding-body"/>')
-                            $('.current .adding-body').append('<textarea style="resize:none" rows="4"/>');
-                            $('.current .adding-body textarea').addClass('note-content form-control').val(currentContent);
-                            $('.current').prepend('<div class="adding-heading"/>');
-                            $('.current .adding-heading').append('<input type="text" />');
-                            $('.current .adding-heading input').addClass('note-title form-control').val(currentTitle);
-                        });
+                    })
+                        editNote();
 
                         $('.btn-save-note').on('click', function () {
                             var $allElementsBeforeCurrent = $('.current').prevAll();
@@ -84,8 +63,17 @@ var notebookController = function() {
                                     toastr.success("Note edited");
                                 });
                         });
-                    })
+
                 }
+
+
+
+
+
+                // $('.btn-delete-note').on('click',function(){
+                //    var $this = $(this);
+                //    $this.parent().parent().parent().addClass('current');
+                //});
 
                 $('.btn-add-note').on('click', function () {
                      $('<div />').append('<div class="adding-heading"><input type="text" value="" placeholder="Enter title" class="note-title form-control" /></div>')
@@ -101,6 +89,7 @@ var notebookController = function() {
                     $('.btn-add-note').prop("disabled", true);
                     $('.current .btn-save-note').prop("disabled", false);
                     $('.current .btn-edit-note').prop("disabled", true);
+
                 });
 
                 function initialSaveNote() {
@@ -124,9 +113,37 @@ var notebookController = function() {
                                 collectionFromStorage = (collectionFromStorage === null) ? [] : JSON.parse(collectionFromStorage);
                                 collectionFromStorage.push(note.id);
                                 localStorage.setItem('dataStored', JSON.stringify(collectionFromStorage));
+
+                                // Temporary fix for editing notes issue
+                                // window.location.reload(true);
                             }, function () {
                                 toastr.error("Unsuccessful adding of a note!")
                             })
+                    });
+                }
+
+                function editNote() {
+                    $('.btn-edit-note').on('click', function () {
+                        var $this = $(this);
+                        $this.parent().parent().parent().addClass('current');
+
+                        $('.btn-delete-note').prop("disabled", true);
+                        $('.btn-edit-note').prop("disabled", true);
+                        $('.current .btn-save-note').prop("disabled", false);
+
+                        // Getting the current data from the edited note
+                        var currentTitle = $('.current .panel-title').html();
+                        var currentContent = $('.current .panel-body').html();
+
+                        // removing the note elements and adding int the note the elements for editing - input field and textarea
+                        $('.current .panel-heading').remove();
+                        $('.current .panel-body').remove();
+                        $('.current').prepend('<div class="adding-body"/>')
+                        $('.current .adding-body').append('<textarea style="resize:none" rows="4"/>');
+                        $('.current .adding-body textarea').addClass('note-content form-control').val(currentContent);
+                        $('.current').prepend('<div class="adding-heading"/>');
+                        $('.current .adding-heading').append('<input type="text" />');
+                        $('.current .adding-heading input').addClass('note-title form-control').val(currentTitle);
                     });
                 }
 
@@ -137,6 +154,7 @@ var notebookController = function() {
                     $('.current .btn-save-note').prop("disabled", true);
                     $('.btn-edit-note').prop("disabled", false);
                     $('.btn-add-note').prop("disabled", false);
+                    $('.btn-delete-note').prop("disabled", false);
                     $('.current .adding-heading').remove();
                     $('.current .adding-body').remove();
                     $('.current')
