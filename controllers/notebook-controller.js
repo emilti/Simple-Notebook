@@ -67,24 +67,22 @@ var notebookController = function() {
                             $('.current').prepend('<div class="adding-heading"/>');
                             $('.current .adding-heading').append('<input type="text" />');
                             $('.current .adding-heading input').addClass('note-title form-control').val(currentTitle);
+                        });
 
+                        $('.btn-save-note').on('click', function () {
                             var $allElementsBeforeCurrent = $('.current').prevAll();
                             var lengthPrev = $allElementsBeforeCurrent.length;
-
-
-                            $('.btn-save-note').on('click', function () {
-                                var noteData = {
-                                    title: ($('.current .note-title').val()),
-                                    content: ($('.current .note-content').val()),
-                                    position: lengthPrev + 1,
-                                    id: sortedNotesFromServer[lengthPrev].id
-                                }
-                                data.notes.saveNoteAfterEdit(noteData)
-                                    .then(function(){
-                                        updateDOMAfterSave()
-                                        toastr.success("Note edited");
-                                    });
-                            });
+                            var noteData = {
+                                title: ($('.current .note-title').val()),
+                                content: ($('.current .note-content').val()),
+                                position: lengthPrev + 1,
+                                id: sortedNotesFromServer[lengthPrev].id
+                            }
+                            data.notes.saveNoteAfterEdit(noteData)
+                                .then(function(){
+                                    updateDOMAfterSave()
+                                    toastr.success("Note edited");
+                                });
                         });
                     })
                 }
@@ -144,10 +142,10 @@ var notebookController = function() {
                     $('.current')
                         .prepend('<div class="panel-body"/>')
                         .prepend('<div class="panel-heading"/>')
-                        .appendTo($('.notes-container'))
                         .addClass('note')
                         .addClass('panel')
-                        .addClass('panel-primary');
+                        .addClass('panel-primary')
+                        //.appendTo($('.notes-container'));
                     $('.current .panel-heading').append('<h3 class="panel-title"/>');
                     $('.current .panel-title').html(noteTitle);
                     $('.current .panel-body').html(noteContent);
