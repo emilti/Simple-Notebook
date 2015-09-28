@@ -96,13 +96,17 @@ body{
     height:60%;
 }
 
+.operation-buttons{
+    padding-left:1%;
+    padding-right:1%;
+}
+
 .operation-buttons div{
     height:10%;
-    padding:1%;
 }
 
 .operation-buttons button{
-    margin:5px;
+    margin-top:5px;
 }
 .username{
     color:white;

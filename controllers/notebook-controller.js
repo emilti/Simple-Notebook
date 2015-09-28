@@ -106,6 +106,7 @@ var notebookController = function() {
 
                 $('.btn-delete-note').on('click', function () {
                     var $this = $(this);
+                    var loggedInUser = Parse.User.current();
                     var idOfDeletedElement;
                     $this.parent().parent().parent().addClass('current');
                     var $allElementsBeforeCurrent = $('.current').prevAll();
@@ -118,10 +119,10 @@ var notebookController = function() {
                     localStorage.setItem('dataStored', JSON.stringify(collectionFromStorage));
                     console.log(loggedInUser);
                     var dataStored = loggedInUser.get('dataStored');
-                    idOfDeletedElement = dataStored[lengthPrev];
-                    dataStored.splice(lengthPrev, 1);
-                    loggedInUser.set('dataStored', dataStored)
-                    loggedInUser.save();
+                    // idOfDeletedElement = dataStored[lengthPrev];
+                    // dataStored.splice(lengthPrev, 1);
+                    // loggedInUser.set('dataStored', dataStored)
+                    // loggedInUser.save();
                 });
             })
 
@@ -140,6 +141,7 @@ var notebookController = function() {
             $('.btn-add-note').prop("disabled", true);
             $('.current .btn-save-note').prop("disabled", false);
             $('.current .btn-edit-note').prop("disabled", true);
+            editNote();
         });
 
         function initialSaveNote() {
@@ -154,17 +156,17 @@ var notebookController = function() {
                     .then(function (note) {
                         updateDOMAfterSave(note)
                         toastr.success("Note saved!")
-                        var user = Parse.User.current();
-                        user.add("dataStored", note.id);
-                        user.save();
-                        Parse.User.current().fetch();
+                        // var user = Parse.User.current();
+                        // user.add("dataStored", note.id);
+                        // user.save();
                         var collectionFromStorage = localStorage.getItem('dataStored');
                         collectionFromStorage = (collectionFromStorage === null) ? [] : JSON.parse(collectionFromStorage);
                         collectionFromStorage.push(note.id);
                         localStorage.setItem('dataStored', JSON.stringify(collectionFromStorage));
 
                         // Temporary fix for editing notes issue
-                        // window.location.reload(true);
+                        window.location.reload(true);
+
                         $('.btn-save-note').removeClass('btn-current-save-note')
 
                     }, function () {
@@ -222,16 +224,33 @@ var notebookController = function() {
         }
 
         $('#btn-logout').on('click', function () {
-             Parse.User.logOut();
-             localStorage.clear();
-             context.redirect('#/');
+            var collectionFromStorage = localStorage.getItem('dataStored');
+            collectionFromStorage = (collectionFromStorage === null) ? [] : JSON.parse(collectionFromStorage);
+            var user = Parse.User.current();
+            user.unset("dataStored");
+            user.set("dataStored", []);
+            user.save();
+            for (var i = 0; i < collectionFromStorage.length; i+=1) {
+                user.add("dataStored", collectionFromStorage[i]);
+                user.save();
+                var noteData = {
+                    position: i + 1,
+                    id: collectionFromStorage[i]
+                }
+                data.notes.saveNotesPositions(noteData);
+            }
+
+
+            Parse.User.logOut();
+            localStorage.clear();
+            context.redirect('#/');
         });
 
 
         function appendingButtons() {
-            $('.current .operation-buttons').append('<div class="col-md-offset-5 col-md-2"><button class="btn btn-md btn-success form-control btn-save-note" disabled>Save</div>')
-                .append('<div class="col-md-2"><button class="btn btn-md btn-primary form-control btn-edit-note">Edit</button></div>')
-                .append('<div class="col-md-2"><button class="btn btn-md btn-danger form-control btn-delete-note">Delete</button></div>')
+            $('.current .operation-buttons').append('<div class="col-md-offset-3 col-sm-3"><button class="btn btn-md btn-success form-control btn-save-note" disabled>Save</div>')
+                .append('<div class="col-sm-3"><button class="btn btn-md btn-primary form-control btn-edit-note">Edit</button></div>')
+                .append('<div class="col-sm-3"><button class="btn btn-md btn-danger form-control btn-delete-note">Delete</button></div>')
         }
      }
     return {

@@ -72,6 +72,7 @@ var data = (function(){
             success: function(object) {
                 object.set("title", noteData.title);
                 object.set("content", noteData.content);
+                object.set("position", noteData.position);
                 object.save();
                 resolve();
             },
@@ -82,6 +83,26 @@ var data = (function(){
     })
         return promise;
     }
+
+    function saveNotesPositions(noteData){
+        var promise = new Promise(function (resolve, reject) {
+            var Note = Parse.Object.extend("Note");
+            var query = new Parse.Query(Note);
+            query.equalTo("objectId", noteData.id);
+            query.first({
+                success: function(object) {
+                    object.set("position", noteData.position);
+                    object.save();
+                    resolve();
+                },
+                error: function(error) {
+                    alert("Error: " + error.code + " " + error.message);
+                }
+            });
+        })
+        return promise;
+    }
+
 
 
     function getNotes(id){
@@ -109,7 +130,8 @@ var data = (function(){
         notes:{
             initialSaveNote: initialSaveNote,
             saveNoteAfterEdit: saveNoteAfterEdit,
-            getNotes: getNotes
+            getNotes: getNotes,
+            saveNotesPositions:saveNotesPositions
         }
     }
 }())
